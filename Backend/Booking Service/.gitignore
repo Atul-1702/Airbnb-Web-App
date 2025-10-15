@@ -1,4 +1,4 @@
 
 node_modules/
-src/genrated/prisma
+src/generated/prisma
 .env
