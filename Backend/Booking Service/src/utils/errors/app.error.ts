@@ -30,3 +30,21 @@ export class ConflictError implements AppError {
     this.message = msg ?? ReasonPhrases.CONFLICT;
   }
 }
+
+export class LockedError implements AppError {
+  name = ReasonPhrases.LOCKED;
+  statusCode = StatusCodes.LOCKED;
+  message = "";
+  constructor(msg?: string) {
+    this.message = msg ?? ReasonPhrases.LOCKED;
+  }
+}
+
+export class ServiceUnavailable implements AppError {
+  name = ReasonPhrases.SERVICE_UNAVAILABLE;
+  statusCode = StatusCodes.SERVICE_UNAVAILABLE;
+  message = "";
+  constructor(msg?: string) {
+    this.message = msg ?? ReasonPhrases.SERVICE_UNAVAILABLE;
+  }
+}

@@ -6,7 +6,6 @@ export default function zodSchemaValidator(
   zodSchema: ZodType
 ): (req: Request, res: Response, next: NextFunction) => void {
   return (req: Request, res: Response, next: NextFunction) => {
-    console.log("ZOd Error");
     try {
       zodSchema.parse(req.body);
       next();
