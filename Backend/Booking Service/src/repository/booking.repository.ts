@@ -8,19 +8,21 @@ import PrismaClient from "../prisma/client";
 import generateIdempotencyKey from "../utils/helpers/generateIdempotencyKey";
 
 export async function createBookingRepository(
+  tx: Prisma.TransactionClient,
   booking: Prisma.BookingCreateInput
 ): Promise<Booking> {
-  const newBooking = await PrismaClient.booking.create({
+  const newBooking = await tx.booking.create({
     data: booking,
   });
   return newBooking;
 }
 
 export async function createIdempotentKeyRepository(
+  tx: Prisma.TransactionClient,
   bookingId: number
 ): Promise<IdempotencyKey> {
   const idempotentKey = generateIdempotencyKey();
-  const idempotentKeyRecord = await PrismaClient.idempotencyKey.create({
+  const idempotentKeyRecord = await tx.idempotencyKey.create({
     data: {
       idemKey: idempotentKey,
       booking: {
@@ -33,22 +35,23 @@ export async function createIdempotentKeyRepository(
   return idempotentKeyRecord;
 }
 
-export async function getIdempotentKeyRepository(
+export async function getIdempotentKeyWithLockRepository(
+  tx: Prisma.TransactionClient,
   key: string
-): Promise<IdempotencyKey | null> {
-  const idempotentKeyRecord: IdempotencyKey | null =
-    await PrismaClient.idempotencyKey.findUnique({
-      where: {
-        idemKey: key,
-      },
-    });
-  return idempotentKeyRecord;
+) {
+  const idempotentKeyRecord: IdempotencyKey[] | null = await tx.$queryRaw(
+    Prisma.raw(
+      `SELECT * FROM IDEMPOTENCYKEY WHERE IDEMKEY='${key}' FOR UPDATE;`
+    )
+  );
+  return idempotentKeyRecord ? idempotentKeyRecord[0] : null;
 }
 
 export async function confirmBookingStatusRepository(
+  tx: Prisma.TransactionClient,
   id: number
 ): Promise<Booking> {
-  const confirmedBooking = await PrismaClient.booking.update({
+  const confirmedBooking = await tx.booking.update({
     where: {
       id: id,
     },
@@ -59,8 +62,11 @@ export async function confirmBookingStatusRepository(
   return confirmedBooking;
 }
 
-export async function finalizeIdempotentKeyRepository(bookingId: number) {
-  await PrismaClient.idempotencyKey.update({
+export async function finalizeIdempotentKeyRepository(
+  tx: Prisma.TransactionClient,
+  bookingId: number
+) {
+  await tx.idempotencyKey.update({
     where: {
       bookingId,
     },

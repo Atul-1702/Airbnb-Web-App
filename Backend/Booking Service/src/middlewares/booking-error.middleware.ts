@@ -8,7 +8,6 @@ export default function bookingErrorMiddleware(
   res: Response,
   next: NextFunction
 ): void {
-  console.log("Error Middleware");
   const status = err.statusCode ?? StatusCodes.INTERNAL_SERVER_ERROR;
   const message = err.message ?? ReasonPhrases.INTERNAL_SERVER_ERROR;
   res.status(status).json({

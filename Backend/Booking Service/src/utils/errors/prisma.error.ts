@@ -1,9 +1,10 @@
 import { Prisma } from "../../prisma/generated/prisma/client";
-import AppError from "./app.error";
+import AppError, { NotFoundError } from "./app.error";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 export default function handlePrismaError(error: unknown) {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    console.log(error?.meta?.modelName);
     switch (error.code) {
       case "P2002":
         return new DuplicateEntryError();
@@ -11,6 +12,11 @@ export default function handlePrismaError(error: unknown) {
         return new ForeignKeyError();
       case "P2004":
         return new DatabaseConstraintError();
+      case "P2025":
+        const message = error.meta
+          ? error?.meta?.modelName + ": " + error?.meta?.cause
+          : "Not Found Error";
+        return new NotFoundError(message);
       default:
         return new UnknownRequestError();
     }
