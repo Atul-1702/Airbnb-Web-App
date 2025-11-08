@@ -2,6 +2,7 @@ import * as winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 const transport: DailyRotateFile = new DailyRotateFile({
+  level: "warn",
   dirname: "./logs",
   filename: "notification-%DATE%.log",
   datePattern: "DD-MM-YYYY",
@@ -26,8 +27,6 @@ const logger: winston.Logger = winston.createLogger({
     }),
   ],
 });
-
-transport.on("error", (error) => {});
 
 transport.on("error", (error: Error) => {
   throw new Error(error.message);
