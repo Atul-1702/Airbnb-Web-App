@@ -9,13 +9,13 @@ const app: Express = express();
 app.listen(serverConfig.PORT, () => {
   logger.info(`Express server is running at port ${serverConfig.PORT}`);
   // addEmailToQueue({
-  //   to: "abcd@gmail.com",
-  //   subject: "abcd",
+  //   to: "atulnitish5@gmail.com",
+  //   subject: "Sending first mail",
   //   templateId: "mailer",
   //   params: {
   //     name: "Atul",
   //   },
   // });
 
-  setupMailWorker();
+  // setupMailWorker();
 });

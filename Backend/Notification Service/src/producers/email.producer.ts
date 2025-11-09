@@ -5,7 +5,7 @@ import NotificationDto from "./../dto/notification.dto";
 
 const addEmailToQueue = async (payload: NotificationDto) => {
   await mailerQueue.add(serverConfig.MAILER_QUEUE_JOB_NAME, payload);
-  logger.info("Email added to queue", { payload });
+  logger.info("Payload added to queue", { payload });
 };
 
 export default addEmailToQueue;
