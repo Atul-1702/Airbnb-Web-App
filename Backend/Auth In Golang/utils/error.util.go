@@ -11,6 +11,7 @@ var (
 	ErrUnauthorized   = errors.New("unauthorized error")
 	ErrBadRequest     = errors.New("bad request")
 	ErrDuplicateEntry = errors.New("Duplicate Entry")
+	ErrForbidden      = errors.New("forbidden error")
 )
 
 func HttpErrorStatusCode(err error) int {
@@ -24,6 +25,8 @@ func HttpErrorStatusCode(err error) int {
 		return http.StatusBadRequest
 	case errors.Is(err, ErrBadRequest):
 		return http.StatusConflict
+	case errors.Is(err, ErrForbidden):
+		return http.StatusForbidden
 	default:
 		return http.StatusInternalServerError
 

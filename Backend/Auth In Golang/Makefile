@@ -1,7 +1,7 @@
 MIGRATIONS_FOLDER=db/migrations
 DB_URL=root:atul@tcp(127.0.0.1:3306)/AIRBNB_USER_AUTH_SERVICE
 
-# Create a new migration -> gmake migrate-create name="create_entity_table
+# Create a new migration -> gmake migrate-create name="create_entity_table"
 migrate-create:
 	goose -dir $(MIGRATIONS_FOLDER) create $(name) sql
 
